@@ -279,7 +279,7 @@ function showDetail(person, index) {
       <div class="detail-section detail-next">
         <div class="detail-label">Nächster Standort</div>
         <div class="detail-value">✈️ ${person.next_location}</div>
-        <div class="detail-value" style="font-size:12px; margin-top:2px;">ab ${formatDate(person.next_from)}${person.next_until ? ` bis ${formatDate(person.next_until)}` : ''}</div>
+        <div class="detail-value" style="font-size:12px; margin-top:2px;">${person.next_from ? 'ab ' + formatDate(person.next_from) : ''}${person.next_from && person.next_until ? ' ' : ''}${person.next_until ? 'bis ' + formatDate(person.next_until) : ''}</div>
       </div>
     ` : ''}
   `;
