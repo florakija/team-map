@@ -99,7 +99,7 @@ if (savedTheme === 'dark') applyTheme(true);
 let teamData = [];
 let markers = [];
 let routeLines = [];
-let hiddenRoutes = JSON.parse(localStorage.getItem('hiddenRoutes') || '{}');
+let hiddenUsers = JSON.parse(localStorage.getItem('hiddenUsers') || '{}');
 let showRoutes = localStorage.getItem('showRoutes') !== 'false';
 
 // ============================================================
@@ -130,6 +130,8 @@ function renderMap() {
   routeLines = [];
 
   teamData.forEach((person, i) => {
+    if (hiddenUsers[person.id]) return;
+
     const color = getColor(i);
     const avatarUrl = person.avatar || generateAvatar(person.name, color);
 
@@ -147,7 +149,7 @@ function renderMap() {
     marker.on('click', () => showDetail(person, i));
     markers.push(marker);
 
-    if (showRoutes && !hiddenRoutes[person.id] && person.next_location && person.next_lat) {
+    if (showRoutes && person.next_location && person.next_lat) {
       const nextIcon = L.divIcon({
         className: '',
         html: `<img src="${avatarUrl}" class="avatar-marker avatar-marker-next" style="border-color: ${color}; width:30px; height:30px;" />`,
@@ -157,7 +159,7 @@ function renderMap() {
 
       const nextMarker = L.marker([person.next_lat, person.next_lng], { icon: nextIcon })
         .addTo(map)
-        .bindPopup(`<strong>${person.name}</strong><br>Ab ${formatDate(person.next_from)}: ${person.next_location}`);
+        .bindPopup(`<strong>${person.name}</strong><br>${person.next_location}`);
 
       nextMarker.on('click', () => showDetail(person, i));
       markers.push(nextMarker);
@@ -186,23 +188,23 @@ function renderTeamList(filter = '') {
     const idx = teamData.indexOf(person);
     const color = getColor(idx);
     const avatarUrl = person.avatar || generateAvatar(person.name, color);
-    const routeHidden = hiddenRoutes[person.id];
+    const isHidden = hiddenUsers[person.id];
     const hasNext = person.next_location && person.next_lat;
     return `
-      <div class="team-member" onclick="focusPerson(${idx})">
+      <div class="team-member${isHidden ? ' hidden-member' : ''}" onclick="focusPerson(${idx})">
         <img src="${avatarUrl}" class="avatar" style="border-color: ${color}" />
         <div class="member-info">
           <div class="member-name">${person.name}</div>
           ${person.title ? `<div class="member-title">${person.title}</div>` : ''}
           <div class="member-location">📍 ${person.current_location}${hasNext ? ` → ${person.next_location}` : ''}</div>
         </div>
-        ${hasNext ? `<button class="visibility-btn${routeHidden ? ' route-hidden' : ''}" onclick="event.stopPropagation(); toggleRoute('${person.id}')" title="${routeHidden ? 'Route einblenden' : 'Route ausblenden'}">
+        <button class="visibility-btn${isHidden ? ' route-hidden' : ''}" onclick="event.stopPropagation(); toggleUser('${person.id}')" title="${isHidden ? 'Einblenden' : 'Ausblenden'}">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            ${routeHidden
+            ${isHidden
               ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
               : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'}
           </svg>
-        </button>` : ''}
+        </button>
       </div>
     `;
   }).join('');
@@ -360,13 +362,13 @@ document.getElementById('route-switch').addEventListener('change', (e) => {
   renderMap();
 });
 
-function toggleRoute(id) {
-  if (hiddenRoutes[id]) {
-    delete hiddenRoutes[id];
+function toggleUser(id) {
+  if (hiddenUsers[id]) {
+    delete hiddenUsers[id];
   } else {
-    hiddenRoutes[id] = true;
+    hiddenUsers[id] = true;
   }
-  localStorage.setItem('hiddenRoutes', JSON.stringify(hiddenRoutes));
+  localStorage.setItem('hiddenUsers', JSON.stringify(hiddenUsers));
   renderMap();
   renderTeamList(document.getElementById('search').value);
 }

@@ -299,11 +299,15 @@ body.dark .route-toggle .toggle-thumb {
   opacity: 1;
 }
 
-.team-member .visibility-btn.route-hidden {
+.team-member.hidden-member {
+  opacity: 0.5;
+}
+
+.team-member.hidden-member .visibility-btn {
   opacity: 0.3;
 }
 
-.team-member:hover .visibility-btn.route-hidden {
+.team-member.hidden-member:hover .visibility-btn {
   opacity: 0.6;
 }
 
