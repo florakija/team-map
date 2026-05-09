@@ -3,7 +3,7 @@
 // ============================================================
 const CONFIG = {
   APPS_SCRIPT_URL: '', // <- nach Setup eintragen
-  DEMO_MODE: true,     // <- auf false setzen wenn Apps Script läuft
+  DEMO_MODE: false,     // <- auf false setzen wenn Apps Script läuft
 };
 
 // ============================================================
