@@ -323,8 +323,9 @@ function dateOverlap(fromA, untilA, fromB, untilB) {
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' });
+  const parts = dateStr.split('-');
+  const d = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+  return d.toLocaleDateString('de-DE', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 }
 
 // ============================================================
