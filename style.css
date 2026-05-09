@@ -183,8 +183,12 @@ body.dark .toggle-track {
   transition: transform 0.3s;
 }
 
-body.dark .toggle-thumb {
+body.dark .theme-toggle .toggle-thumb {
   transform: translateX(24px);
+  background: #1a1a1a;
+}
+
+body.dark .route-toggle .toggle-thumb {
   background: #1a1a1a;
 }
 
