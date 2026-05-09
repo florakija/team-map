@@ -99,6 +99,8 @@ if (savedTheme === 'dark') applyTheme(true);
 let teamData = [];
 let markers = [];
 let routeLines = [];
+let hiddenUsers = JSON.parse(localStorage.getItem('hiddenUsers') || '{}');
+let showRoutes = localStorage.getItem('showRoutes') !== 'false';
 
 // ============================================================
 // Daten laden
@@ -128,6 +130,8 @@ function renderMap() {
   routeLines = [];
 
   teamData.forEach((person, i) => {
+    if (hiddenUsers[person.id]) return;
+
     const color = getColor(i);
     const avatarUrl = person.avatar || generateAvatar(person.name, color);
 
@@ -145,7 +149,7 @@ function renderMap() {
     marker.on('click', () => showDetail(person, i));
     markers.push(marker);
 
-    if (person.next_location && person.next_lat) {
+    if (showRoutes && person.next_location && person.next_lat) {
       const nextIcon = L.divIcon({
         className: '',
         html: `<img src="${avatarUrl}" class="avatar-marker avatar-marker-next" style="border-color: ${color}; width:30px; height:30px;" />`,
@@ -184,14 +188,16 @@ function renderTeamList(filter = '') {
     const idx = teamData.indexOf(person);
     const color = getColor(idx);
     const avatarUrl = person.avatar || generateAvatar(person.name, color);
+    const isHidden = hiddenUsers[person.id];
     return `
-      <div class="team-member" onclick="focusPerson(${idx})">
+      <div class="team-member${isHidden ? ' hidden-member' : ''}" onclick="focusPerson(${idx})">
         <img src="${avatarUrl}" class="avatar" style="border-color: ${color}" />
         <div class="member-info">
           <div class="member-name">${person.name}</div>
           ${person.title ? `<div class="member-title">${person.title}</div>` : ''}
           <div class="member-location">📍 ${person.current_location}${person.next_location ? ` → ${person.next_location}` : ''}</div>
         </div>
+        <button class="visibility-btn" onclick="event.stopPropagation(); toggleUser('${person.id}')" title="${isHidden ? 'Einblenden' : 'Ausblenden'}">${isHidden ? '👁️‍🗨️' : '👁️'}</button>
       </div>
     `;
   }).join('');
@@ -343,10 +349,28 @@ document.getElementById('theme-switch').addEventListener('change', (e) => {
   applyTheme(e.target.checked);
 });
 
+document.getElementById('route-switch').addEventListener('change', (e) => {
+  showRoutes = e.target.checked;
+  localStorage.setItem('showRoutes', showRoutes);
+  renderMap();
+});
+
+function toggleUser(id) {
+  if (hiddenUsers[id]) {
+    delete hiddenUsers[id];
+  } else {
+    hiddenUsers[id] = true;
+  }
+  localStorage.setItem('hiddenUsers', JSON.stringify(hiddenUsers));
+  renderMap();
+  renderTeamList(document.getElementById('search').value);
+}
+
 // ============================================================
 // Init
 // ============================================================
 async function init() {
+  document.getElementById('route-switch').checked = showRoutes;
   await loadData();
   renderMap();
   renderTeamList();
