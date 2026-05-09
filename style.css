@@ -90,6 +90,43 @@ body {
   letter-spacing: -0.5px;
 }
 
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-controls #search {
+  flex: 1;
+}
+
+/* ---- Route Toggle ---- */
+.route-toggle {
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.route-toggle input {
+  display: none;
+}
+
+.route-toggle-track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--hover-bg);
+  border: 1px solid var(--input-border);
+  font-size: 12px;
+  white-space: nowrap;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.route-toggle input:not(:checked) + .route-toggle-track {
+  opacity: 0.5;
+}
+
 /* ---- Theme Toggle ---- */
 .theme-toggle {
   cursor: pointer;
@@ -227,6 +264,25 @@ body.dark .toggle-thumb {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.team-member .visibility-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.team-member .visibility-btn:hover {
+  opacity: 1;
+}
+
+.team-member.hidden-member {
+  opacity: 0.4;
 }
 
 .team-member .member-title {
