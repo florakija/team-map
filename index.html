@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="sidebar">
+    <div class="sidebar-header">
+      <div class="header-row">
+        <h1>Team Map</h1>
+        <label class="theme-toggle" title="Theme wechseln">
+          <input type="checkbox" id="theme-switch" />
+          <span class="toggle-track">
+            <span class="toggle-sun">☀️</span>
+            <span class="toggle-moon">🌙</span>
+            <span class="toggle-thumb"></span>
+          </span>
+        </label>
+      </div>
+      <input type="text" id="search" placeholder="Person suchen..." />
+    </div>
+    <div id="proximity-alerts"></div>
+    <div id="team-list"></div>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="person-detail" class="hidden">
+    <button id="close-detail">&times;</button>
+    <div id="detail-content"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
