@@ -2,7 +2,7 @@
 // KONFIGURATION — hier deine Google Apps Script URL eintragen
 // ============================================================
 const CONFIG = {
-  APPS_SCRIPT_URL: '', // <- nach Setup eintragen
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzb1nE3jOLfXyz5X3P5lHtcb5iniN8fgQQq0GwWdbX-C5F0aFa6aNhNcpqDo5Z2wl55/exec', // <- nach Setup eintragen
   DEMO_MODE: false,     // <- auf false setzen wenn Apps Script läuft
 };
 
