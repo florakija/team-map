@@ -103,6 +103,8 @@ body {
 /* ---- Route Toggle ---- */
 .route-toggle {
   cursor: pointer;
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
 }
 
@@ -110,21 +112,28 @@ body {
   display: none;
 }
 
-.route-toggle-track {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: var(--hover-bg);
-  border: 1px solid var(--input-border);
-  font-size: 12px;
-  white-space: nowrap;
-  transition: background 0.2s, opacity 0.2s;
+.route-track {
+  width: 52px;
+  height: 28px;
 }
 
-.route-toggle input:not(:checked) + .route-toggle-track {
-  opacity: 0.5;
+.toggle-icon-left,
+.toggle-icon-right {
+  font-size: 13px;
+  line-height: 1;
+  z-index: 1;
+}
+
+.route-toggle input:not(:checked) + .route-track .toggle-thumb {
+  transform: translateX(24px);
+}
+
+.route-toggle input:not(:checked) + .route-track {
+  background: #ccc;
+}
+
+body.dark .route-toggle input:not(:checked) + .route-track {
+  background: #444;
 }
 
 /* ---- Theme Toggle ---- */
@@ -270,19 +279,28 @@ body.dark .toggle-thumb {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 13px;
   padding: 4px;
-  opacity: 0.4;
+  opacity: 0;
   transition: opacity 0.2s;
   flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.team-member:hover .visibility-btn {
+  opacity: 0.4;
 }
 
 .team-member .visibility-btn:hover {
   opacity: 1;
 }
 
-.team-member.hidden-member {
-  opacity: 0.4;
+.team-member .visibility-btn.route-hidden {
+  opacity: 0.3;
+}
+
+.team-member:hover .visibility-btn.route-hidden {
+  opacity: 0.6;
 }
 
 .team-member .member-title {
