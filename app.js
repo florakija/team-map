@@ -108,16 +108,30 @@ let showRoutes = localStorage.getItem('showRoutes') !== 'false';
 async function loadData() {
   if (CONFIG.DEMO_MODE || !CONFIG.APPS_SCRIPT_URL) {
     teamData = DEMO_DATA;
-    return;
+  } else {
+    try {
+      const res = await fetch(CONFIG.APPS_SCRIPT_URL);
+      teamData = await res.json();
+    } catch (e) {
+      console.error('Fehler beim Laden:', e);
+      teamData = DEMO_DATA;
+    }
   }
 
-  try {
-    const res = await fetch(CONFIG.APPS_SCRIPT_URL);
-    teamData = await res.json();
-  } catch (e) {
-    console.error('Fehler beim Laden:', e);
-    teamData = DEMO_DATA;
-  }
+  const today = new Date().toISOString().slice(0, 10);
+  teamData.forEach(person => {
+    if (person.current_until && person.current_until < today && person.next_location) {
+      person.current_location = person.next_location;
+      person.current_lat = person.next_lat;
+      person.current_lng = person.next_lng;
+      person.current_until = person.next_until || '';
+      person.next_location = '';
+      person.next_lat = null;
+      person.next_lng = null;
+      person.next_from = '';
+      person.next_until = '';
+    }
+  });
 }
 
 // ============================================================
